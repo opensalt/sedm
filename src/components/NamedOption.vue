@@ -10,9 +10,11 @@ const propertyInfo = ontologyStore.getClassData(props.property);
 </script>
 
 <template>
-    <div class="property ms-4">
-      <span class="fw-bold" v-if="propertyInfo.notation.find(()=>true)">{{ propertyInfo.notation.find(()=>true) }} - </span><span class="">{{propertyInfo.label.find(()=>true)}}</span>
-    </div>
+    <tr>
+      <td>{{ propertyInfo.label.find(()=>true) }}</td>
+      <td>{{ propertyInfo.definition.find(()=>true) }}</td>
+      <td>{{ propertyInfo.notation.find(()=>true) }}</td>
+    </tr>
 </template>
 
 <style scoped>

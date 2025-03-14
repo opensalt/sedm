@@ -29,7 +29,19 @@
 
     <div v-if="data.optionIds.length">
       <h3>Options</h3>
-      <NamedOption v-for="item in data.optionIds" :key="item.id" :property="item" />
+      <table class="table table-responsive table-striped table-hover">
+        <thead>
+        <tr>
+          <th scope="col">Description</th>
+          <th scope="col">Definition</th>
+          <th scope="col">Code</th>
+        </tr>
+        </thead>
+        <tbody class="overflow-y-scroll">
+          <NamedOption v-for="item in data.optionIds" :key="item.id" :property="item" />
+        </tbody>
+      </table>
+
     </div>
   </div>
 </template>
