@@ -5,7 +5,9 @@ import { CEDS_PREFIX, RDFS_PREFIX, SKOS_PREFIX } from '@/stores/prefixes.ts'
 const ontologyStore = useOntologyStore();
 
 const props = defineProps<{property: any}>()
-const propertyInfo = ontologyStore.getClassData(props.property);
+const propertyInfo = computed(() => {
+  return ontologyStore.getClassData(props.property).value;
+});
 
 const range = computed(() => {
   const val = propertyInfo.value.rangeIncludes?.find(()=>true);
