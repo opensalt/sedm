@@ -13,6 +13,24 @@ const element: any = computed(() => {
 const isSedm = computed(() => {
   return domainElements.sedmProperties.includes(element.global_id || 'Not Found');
 });
+const codesetId = computed(() => {
+  const mapping = domainElements.termCodesets.find((e) => {
+    return e.term_id == element.value.term_id;
+  });
+
+  return mapping?.codeset_id || null;
+});
+const codeset = computed(() => {
+  if (codesetId.value === null) {
+    return [];
+  }
+
+  const codeset = domainElements.codesets.find((e) => {
+    return e.codeset_id === codesetId.value;
+  });
+
+  return codeset?.codes || [];
+});
 </script>
 
 <template>
@@ -30,7 +48,27 @@ const isSedm = computed(() => {
         <dd v-if="element.format">{{ element.format }}</dd>
 
         <dt v-if="element.usage_notes">Usage Notes</dt>
-        <dd v-if="element.usage_notes">{{ element.usage_notes }}</dd>
+        <dd v-if="element.usage_notes" v-html="element.usage_notes"></dd>
+
+        <dt v-if="codeset.length">Option Set</dt>
+        <dd v-if="codeset.length" class="mx-3">
+          <table class="table table-responsive table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Description</th>
+                <th scope="col">Definition</th>
+                <th scope="col">Code</th>
+              </tr>
+            </thead>
+            <tbody class="overflow-y-scroll">
+              <tr v-for="code in codeset">
+                <td>{{ code.description}}</td>
+                <td>{{ code.definition }}</td>
+                <td>{{ code.code}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </dd>
 
         <dt>Related Domains, Entities, and Categories</dt>
         <dd>
@@ -52,7 +90,7 @@ const isSedm = computed(() => {
         <dd>{{ element.url }}</dd>
 
         <dt>Find in ontology</dt>
-        <dd><RouterLink :to="{name: 'propertyView', params: {id: 'P'+element.global_id}}">{{element.global_id}}</RouterLink></dd>
+        <dd><RouterLink :to="{name: 'propertyView', params: {id: 'P'+element.global_id}}">P{{element.global_id}}</RouterLink></dd>
     </dl>
     </div>
     <div v-else>

@@ -110,13 +110,13 @@ const showModal = (id: string) => {
     <TreeNode :node="data" :onlySedm="sedmOnly" @clicked="(id) => showModal(id)" />
 
 <div id='elementModal' class="modal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Element Details</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body overflow-y-scroll">
         <DomainElement :id="elementId" />
       </div>
       <div class="modal-footer">
@@ -129,5 +129,7 @@ const showModal = (id: string) => {
 </template>
 
 <style scoped>
-
+#elementModal {
+  max-height: 75vh;
+}
 </style>
