@@ -35,7 +35,7 @@
 
     <div v-if="data.optionIds.length" class="mt-3">
       <h3>Options</h3>
-      <table class="table table-responsive table-striped table-hover">
+      <table class="table table-responsive table-striped table-hover mx-3">
         <thead>
         <tr>
           <th scope="col">Description</th>
