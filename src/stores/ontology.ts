@@ -88,6 +88,7 @@ export const useOntologyStore = defineStore('ontology', () => {
         tags: <string[]>[],
         propertyIds: <string[]>[],
         optionIds: <string[]>[],
+        inRangeOf: <string[]>[],
       };
 
       if (!initialized.value) {
@@ -106,7 +107,11 @@ export const useOntologyStore = defineStore('ontology', () => {
         data.optionIds.push(s.value);
       }, SKOS_PREFIX+'inScheme', id, null);
 
-      return data;
+      quads.forSubjects((s) => {
+        data.inRangeOf.push(s.value);
+      }, SCHEMA_PREFIX+'rangeIncludes', id, null);
+
+    return data;
     });
 
   const getAllProperties = computed(() => {

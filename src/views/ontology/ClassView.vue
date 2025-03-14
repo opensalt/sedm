@@ -5,6 +5,7 @@
   import { watch } from 'vue'
   import { CEDS_PREFIX, OWL_PREFIX } from '@/stores/prefixes.ts'
   import NamedOption from '@/components/NamedOption.vue'
+  import ReferencingProperty from '@/components/ReferencingProperty.vue'
 
   const route = useRoute();
   const ontologyStore = useOntologyStore();
@@ -27,7 +28,12 @@
       <ClassProperty v-for="item in data.propertyIds" :key="item.id" :property="item" />
     </div>
 
-    <div v-if="data.optionIds.length">
+    <div v-if="data.inRangeOf.length" class="mt-3">
+      <h3>Referenced By</h3>
+      <ReferencingProperty v-for="item in data.inRangeOf" :key="item.id" :property="item" />
+    </div>
+
+    <div v-if="data.optionIds.length" class="mt-3">
       <h3>Options</h3>
       <table class="table table-responsive table-striped table-hover">
         <thead>
