@@ -22,4 +22,12 @@ export const keyMap: {[key in string]: string} = {
   'http://www.w3.org/2004/02/skos/core#definition': 'definition',
   'http://www.w3.org/2004/02/skos/core#inScheme': 'inScheme',
   'http://purl.org/os/terms#hasTag': 'tags',
+  'http://ceds.ed.gov/terms#textFormat': 'textFormat',
+  'http://ceds.ed.gov/terms#minCount': 'minCount',
+  'http://ceds.ed.gov/terms#maxCount': 'maxCount',
+  'http://ceds.ed.gov/terms#minLength': 'minLength',
+  'http://ceds.ed.gov/terms#maxLength': 'maxLength',
+  'http://ceds.ed.gov/terms#minInclusive': 'minInclusive',
+  'http://ceds.ed.gov/terms#maxInclusive': 'maxInclusive',
+  'http://ceds.ed.gov/terms#decimalPlaces': 'decimalPlaces',
 }

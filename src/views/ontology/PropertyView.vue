@@ -10,6 +10,7 @@
   let propertyInfo = ontologyStore.getClassData(CEDS_PREFIX+route.params.id);
   watch(route, (newValue, oldValue) => {
     propertyInfo = ontologyStore.getClassData(CEDS_PREFIX+newValue.params.id);
+    console.log(propertyInfo);
   }, {flush: 'pre', immediate: true, deep: true});
 
   const range = computed(() => {
@@ -62,6 +63,30 @@
     <h1>{{propertyInfo.label.find(()=>true)}}</h1>
 
     <p>{{propertyInfo.description.find(()=>true) || propertyInfo.comment.find(()=>true)}}</p>
+    <p v-if="propertyInfo.textFormat.find(()=>true)" class="mb-0">
+      Format: {{ propertyInfo.textFormat.find(()=>true) }}
+    </p>
+    <p v-if="propertyInfo.minLength.find(()=>true) || propertyInfo.maxLength.find(()=>true)" class="my-0">
+      Length:
+      {{ propertyInfo.minLength.find(()=>true) || '0' }}
+      -
+      {{ propertyInfo.maxLength.find(()=>true) || '?' }}
+    </p>
+    <p v-if="propertyInfo.minCount.find(()=>true)" class="my-0">
+      Count:
+      {{ propertyInfo.minCount.find(()=>true) || '0' }}
+      -
+      {{ propertyInfo.maxCount.find(()=>true) || '?' }}
+    </p>
+    <p v-if="propertyInfo.minInclusive.find(()=>true) || propertyInfo.maxInclusive.find(()=>true)" class="my-0">
+      Value:
+      <span title="inclusive">{{ propertyInfo.minInclusive.find(()=>true) || '?' }}</span>
+      -
+      <span title="inclusive">{{ propertyInfo.maxInclusive.find(()=>true) || '? '}}</span>
+    </p>
+    <p v-if="propertyInfo.decimalPlaces.find(()=>true)" class="my-0">
+      Decimal Places: {{ propertyInfo.decimalPlaces.find(()=>true) }}
+    </p>
 
     <h4 class="mt-4">Range</h4>
     <span class="fst-italic text-lowercase text-muted">{{ range.type }}</span>:

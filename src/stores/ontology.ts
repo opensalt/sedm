@@ -92,6 +92,14 @@ export const useOntologyStore = defineStore('ontology', () => {
         superClasses: <any[]>[],
         superClassOf: <string[]>[],
         subClasses: <any[]>[],
+        textFormat: <string[]>[],
+        minCount: <string[]>[],
+        maxCount: <string[]>[],
+        minLength: <string[]>[],
+        maxLength: <string[]>[],
+        minInclusive: <string[]>[],
+        maxInclusive: <string[]>[],
+        decimalPlaces: <string[]>[],
       };
 
       if (!initialized.value) {
