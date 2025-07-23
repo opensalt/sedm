@@ -9,7 +9,9 @@ const classList = computed(() => {
       label: term.label,
       id: term.id.replace(/^.*([:#])/, ''),
     };
-  })
+  }).sort((a, b) => {
+    return a.label.localeCompare(b.label);
+  });
 })
 </script>
 
