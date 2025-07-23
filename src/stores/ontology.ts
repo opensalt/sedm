@@ -90,6 +90,8 @@ export const useOntologyStore = defineStore('ontology', () => {
         optionIds: <string[]>[],
         inRangeOf: <string[]>[],
         superClasses: <any[]>[],
+        superClassOf: <string[]>[],
+        subClasses: <any[]>[],
       };
 
       if (!initialized.value) {
@@ -112,8 +114,11 @@ export const useOntologyStore = defineStore('ontology', () => {
         data.inRangeOf.push(s.value);
       }, SCHEMA_PREFIX+'rangeIncludes', id, null);
 
+      quads.forSubjects((s) => {
+        data.superClassOf.push(s.value);
+      }, RDFS_PREFIX+'subClassOf', id, null);
+
       const getSuperClasses = (id: string) => {
-        console.log('called with', id);
         let superClasses: string[] = [];
         let subClassOf = [];
         if (id === data.id) {
@@ -122,19 +127,16 @@ export const useOntologyStore = defineStore('ontology', () => {
           subClassOf = getClassData(id).value.subClassOf;
         }
         subClassOf.forEach((superClass: string) => {
-          console.log('superclass', id);
           if (superClass !== CEDS_PREFIX+'C000000' && superClass.startsWith(CEDS_PREFIX)) {
             //superClasses.push(...getSuperClasses(superClass));
             superClasses.push(superClass);
           }
         });
 
-        console.log('returning', superClasses);
         return [...new Set(superClasses)];
       };
 
       getSuperClasses(data.id).forEach((superClass: string) => {
-        console.log('start', data.id);
         data.superClasses.push(getClassData(superClass));
       });
       /*
@@ -144,6 +146,10 @@ export const useOntologyStore = defineStore('ontology', () => {
         }
       });
        */
+
+      data.superClassOf.forEach((subClass: string) => {
+        data.subClasses.push(getClassData(subClass));
+      });
 
       return data;
     });

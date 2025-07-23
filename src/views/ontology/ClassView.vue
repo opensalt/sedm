@@ -20,10 +20,18 @@
     <h4 class="">{{data.value.type.includes(OWL_PREFIX+'Class') ? 'Option Set' : data.value.type.find(()=>true)?.replace(/^.*#/, '')}}</h4>
     <h1>{{data.value.label.find(()=>true)}}</h1>
     <p>{{data.value.description.find(()=>true) || data.value.comment.find(()=>true)}}</p>
-    <p v-if="data.value.superClasses.length > 0">Sub-class of:
+    <p v-if="data.value.superClasses.length > 0">
+      Sub-class of:
       <span v-for="(superClass, index) in data.value.superClasses" :key="superClass.value.id">
         <span v-if="index !== 0">, </span>
         <RouterLink :to="{ name: 'classView', params: { id: superClass.value.id.replace(/^.*#/, '') }}" class="fw-bold text-reset">{{ superClass.value.label.find(()=>true) || superClass.value.id }}</RouterLink>
+      </span>
+    </p>
+    <p v-if="data.value.subClasses.length > 0">
+      Super-class of:
+      <span v-for="(subClass, index) in data.value.subClasses" :key="subClass.value.id">
+        <span v-if="index !== 0">, </span>
+        <RouterLink :to="{ name: 'classView', params: { id: subClass.value.id.replace(/^.*#/, '') }}" class="fw-bold text-reset">{{ subClass.value.label.find(()=>true) || subClass.value.id }}</RouterLink>
       </span>
     </p>
 
