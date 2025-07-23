@@ -61,7 +61,7 @@
 
     <h1>{{propertyInfo.label.find(()=>true)}}</h1>
 
-    <h2>{{propertyInfo.description.find(()=>true) || propertyInfo.comment.find(()=>true)}}</h2>
+    <p>{{propertyInfo.description.find(()=>true) || propertyInfo.comment.find(()=>true)}}</p>
 
     <h4 class="mt-4">Range</h4>
     <span class="fst-italic text-lowercase text-muted">{{ range.type }}</span>:
