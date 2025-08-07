@@ -12,14 +12,14 @@ const onlyOneRef: Ref<boolean, boolean> | undefined = inject('onlyOneRef');
 const classList = computed(() => {
   return ontologyStore
     .getClassData(props.id)
-    .value.subClasses.filter((c) => {
+    .value.subClasses.filter((c: any) => {
       return (
         (optionSets?.value || !c.value.type.includes(OWL_PREFIX + 'Class'))
         && (onlyOneRef?.value || c.value.inRangeOf.length !== 1)
         // && !(props.id === CEDS_PREFIX+'C000000' && c.value.superClasses.length > 1)
       )
     })
-    .sort((a, b) => {
+    .sort((a: any, b: any) => {
       return a.value.label.find(() => true).localeCompare(b.value.label.find(() => true))
     })
 })
