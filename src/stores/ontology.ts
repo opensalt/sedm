@@ -72,6 +72,7 @@ export const useOntologyStore = defineStore('ontology', () => {
   const getClassData = (id: string) => computed(() => {
       const data: {[key in string]: any} = {
         id: id,
+        shortId: id.replace(/^.*([:#])/, ''),
         type: <string[]>[],
         subClassOf: <string[]>[],
         label: <string[]>[],
@@ -135,7 +136,7 @@ export const useOntologyStore = defineStore('ontology', () => {
           subClassOf = getClassData(id).value.subClassOf;
         }
         subClassOf.forEach((superClass: string) => {
-          if (superClass !== CEDS_PREFIX+'C000000' && superClass.startsWith(CEDS_PREFIX)) {
+          if (/*superClass !== CEDS_PREFIX+'C000000' && */ superClass.startsWith(CEDS_PREFIX)) {
             //superClasses.push(...getSuperClasses(superClass));
             superClasses.push(superClass);
           }
