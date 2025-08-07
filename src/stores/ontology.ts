@@ -11,6 +11,8 @@ export const useOntologyStore = defineStore('ontology', () => {
   const initialized = ref(false);
   const classInfo = ref<{[key in string]: any}>({});
   const sedmProperties: string[] = [];
+  const showOptionSets = ref<boolean>(false);
+  const showIfOneRef = ref<boolean>(false);
 
   async function init() {
     fetch('/CEDS-Ontology.ttl')
@@ -193,5 +195,13 @@ export const useOntologyStore = defineStore('ontology', () => {
     return initialized.value;
   });
 
-  return { classList, propertyList, getClassData, getAllProperties, classInfo, isInitialized }
+  const toggleShowIfOneRef = () => {
+    showIfOneRef.value = !showIfOneRef.value;
+  };
+
+  const toggleShowOptionSets = () => {
+    showOptionSets.value = !showOptionSets.value;
+  };
+
+  return { classList, propertyList, getClassData, getAllProperties, classInfo, isInitialized, showIfOneRef, toggleShowIfOneRef, showOptionSets, toggleShowOptionSets }
 })
