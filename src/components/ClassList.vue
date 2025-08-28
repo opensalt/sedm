@@ -3,26 +3,97 @@ import { useOntologyStore } from '@/stores/ontology.ts'
 import { computed, provide, ref } from 'vue'
 import SubclassList from '@/components/SubclassList.vue'
 
+// Props for organization method and classifications
+interface Props {
+  organizationMethod?: string
+  classifications?: {
+    greg: { [key: string]: string[] }
+    nathan: { [key: string]: string[] }
+  }
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  organizationMethod: 'current',
+  classifications: () => ({ greg: {}, nathan: {} }),
+})
 const ontologyStore = useOntologyStore()
 
-const optionSets = ref(ontologyStore.showOptionSets);
-provide('optionSets', optionSets);
+const optionSets = ref(ontologyStore.showOptionSets)
+provide('optionSets', optionSets)
 
-const onlyOneRef = ref(ontologyStore.showIfOneRef);
-provide('onlyOneRef', onlyOneRef);
+const onlyOneRef = ref(ontologyStore.showIfOneRef)
+provide('onlyOneRef', onlyOneRef)
+
+// Helper function to get class label from IRI
+const getClassLabel = (iri: string): string => {
+  const shortId = iri.split('#')[1]
+  if (shortId) {
+    const classData = ontologyStore.getClassData(`http://ceds.ed.gov/terms#${shortId}`)
+    if (classData.value && classData.value.label && classData.value.label.length > 0) {
+      return classData.value.label[0]
+    }
+  }
+  return shortId || iri
+}
+
+// Build classification-based class list
+const buildClassificationClassList = (classificationData: { [key: string]: string[] }) => {
+  const classList: any[] = []
+
+  Object.keys(classificationData).forEach((conceptType) => {
+    // Get actual ontology classes for this concept type
+    const conceptMembers = classificationData[conceptType] || []
+    const subClasses = conceptMembers
+      .map((iri: string) => {
+        const shortId = iri.split('#')[1]
+        if (shortId) {
+          // Try to find the class in the ontology store
+          const classData = ontologyStore.getClassData(`http://ceds.ed.gov/terms#${shortId}`)
+          if (classData.value && classData.value.id) {
+            return classData
+          }
+        }
+        return null
+      })
+      .filter((classRef) => classRef !== null)
+
+    // Create a virtual class for each concept type
+    const conceptClass = {
+      id: `concept-${conceptType}`,
+      shortId: `concept-${conceptType}`,
+      label: [`${conceptType} (Classification)`],
+      superClasses: [],
+      subClasses: subClasses,
+      properties: [],
+      conceptType: conceptType,
+      isClassificationGroup: true,
+      members: conceptMembers,
+    }
+    classList.push(conceptClass)
+  })
+
+  return classList.sort((a, b) => a.label[0].localeCompare(b.label[0]))
+}
 
 const classList = computed(() => {
-  return ontologyStore.classList
-    .filter((c) => {
-      const classData = ontologyStore.getClassData(c.id).value
-      return classData.superClasses.length === 0
-    })
-    .map((term) => {
-      return ontologyStore.getClassData(term.id).value
-    })
-    .sort((a, b) => {
-      return a.label.find(() => true).localeCompare(b.label.find(() => true))
-    })
+  if (props.organizationMethod === 'greg') {
+    return buildClassificationClassList(props.classifications.greg)
+  } else if (props.organizationMethod === 'nathan') {
+    return buildClassificationClassList(props.classifications.nathan)
+  } else {
+    // Original logic for current method
+    return ontologyStore.classList
+      .filter((c) => {
+        const classData = ontologyStore.getClassData(c.id).value
+        return classData.superClasses.length === 0
+      })
+      .map((term) => {
+        return ontologyStore.getClassData(term.id).value
+      })
+      .sort((a, b) => {
+        return a.label.find(() => true).localeCompare(b.label.find(() => true))
+      })
+  }
 })
 </script>
 
@@ -53,11 +124,25 @@ const classList = computed(() => {
 
   <div class="my-4">
     <ul>
-      <li v-for="term in classList">
-        <RouterLink :to="{ name: 'classView', params: { id: term.shortId } }">{{
-          term.label.find(() => true)
-        }}</RouterLink>
-        <SubclassList :id="term.id"></SubclassList>
+      <li v-for="term in classList" :key="term.id">
+        <template v-if="term.isClassificationGroup">
+          <!-- Classification group display -->
+          <strong>{{ term.label[0] }}</strong>
+          <ul class="mt-2 ms-3">
+            <li v-for="member in term.members" :key="member" class="text-muted">
+              <RouterLink :to="{ name: 'classView', params: { id: member.split('#')[1] } }">
+                {{ getClassLabel(member) }}
+              </RouterLink>
+            </li>
+          </ul>
+        </template>
+        <template v-else>
+          <!-- Regular ontology class display -->
+          <RouterLink :to="{ name: 'classView', params: { id: term.shortId } }">{{
+            term.label.find(() => true)
+          }}</RouterLink>
+          <SubclassList :id="term.id"></SubclassList>
+        </template>
       </li>
     </ul>
   </div>
