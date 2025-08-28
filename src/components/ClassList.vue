@@ -67,7 +67,9 @@ const buildClassificationClassList = (classificationData: { [key: string]: strin
       properties: [],
       conceptType: conceptType,
       isClassificationGroup: true,
-      members: conceptMembers,
+      members: conceptMembers.sort((a, b) => {
+        return getClassLabel(a).localeCompare(getClassLabel(b))
+      }),
     }
     classList.push(conceptClass)
   })
@@ -80,6 +82,8 @@ const classList = computed(() => {
     return buildClassificationClassList(props.classifications.greg)
   } else if (props.organizationMethod === 'nathan') {
     return buildClassificationClassList(props.classifications.nathan)
+  } else if (props.organizationMethod === 'domain') {
+    return buildClassificationClassList(props.classifications.domain)
   } else {
     // Original logic for current method
     return ontologyStore.classList
