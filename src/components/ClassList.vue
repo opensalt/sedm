@@ -9,12 +9,13 @@ interface Props {
   classifications?: {
     greg: { [key: string]: string[] }
     nathan: { [key: string]: string[] }
+    domain: { [key: string]: string[] }
   }
 }
 
 const props = withDefaults(defineProps<Props>(), {
   organizationMethod: 'current',
-  classifications: () => ({ greg: {}, nathan: {} }),
+  classifications: () => ({ greg: {}, nathan: {}, domain: {} }),
 })
 const ontologyStore = useOntologyStore()
 
